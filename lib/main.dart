@@ -16,20 +16,24 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (context) => TestblocBloc(),
-        child: WillPopScope(
-          onWillPop: () async {
-            BlocProvider.of<TestblocBloc>(context).add(GoBackEvent());
-            return Future.value(false);
-          },
-          child: Scaffold(
-            body: BlocBuilder<TestblocBloc, TestblocState>(
-              builder: (context, state) {
-                if (state is TestblocInitial) return FirstPage();
-                if (state is SecondPageState) return SecondPage();
-                return null;
+        child: Builder(
+          builder: (context) {
+            return WillPopScope(
+              onWillPop: () async {
+                BlocProvider.of<TestblocBloc>(context).add(GoBackEvent());
+                return false;
               },
-            ),
-          ),
+              child: Scaffold(
+                body: BlocBuilder<TestblocBloc, TestblocState>(
+                  builder: (context, state) {
+                    if (state is TestblocInitial) return FirstPage();
+                    if (state is SecondPageState) return SecondPage();
+                    return null;
+                  },
+                ),
+              ),
+            );
+          },
         ),
       ),
     );
@@ -85,4 +89,3 @@ class SecondPage extends StatelessWidget {
     );
   }
 }
-
